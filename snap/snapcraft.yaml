@@ -1,0 +1,75 @@
+name: gnome-contacts
+version: 3.22.1
+summary: A contacts manager for GNOME
+description: |
+
+      Contacts keeps and organize your contacts information. You can create,
+      edit, delete and link together pieces of information about your contacts.
+      Contacts aggregates the details from all your sources providing a
+      centralized place for managing your contacts.
+
+      Contacts will also integrate with online address books and automatically
+      link contacts from different online sources.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: strict
+
+# libgdk is linked with libmirclient, which doesn't seem to end up in
+# the snap otherwise.
+plugs:
+  mir-libs:
+    interface: content
+    content: mir0
+    target: mir-libs
+    default-provider: mir-libs
+
+slots:
+  # for GtkApplication registration
+  gnome-contacts:
+    interface: dbus
+    bus: session
+    name: org.gnome.Contacts
+
+apps:
+  gnome-contacts:
+    command: desktop-launch $SNAP/bin/gnome-contacts
+    environment:
+      GSETTINGS_SCHEMA_DIR: /snap/gnome-contacts/current/share/glib-2.0/schemas
+    plugs:
+      - x11
+      - home
+      - gsettings
+      - mir-libs
+    slots:
+      - gnome-contacts
+
+parts:
+  gnome-contacts:
+    after:
+      - desktop-gtk3
+    plugin: autotools
+    source: .
+    install: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/mir-libs
+      glib-compile-schemas $SNAPCRAFT_PART_INSTALL/share/glib-2.0/schemas
+
+    build-packages:
+      - gnome-common
+      - libebook1.2-dev
+      - libedataserver1.2-dev
+      - libedataserverui1.2-dev
+      - libfolks-dev
+      - libfolks-eds-dev
+      - libfolks-telepathy-dev
+      - libgee-0.8-dev
+      - libchamplain-0.12-dev
+      - libclutter-gtk-1.0-dev
+      - libgeocode-glib-dev
+      - libglib2.0-dev
+      - libgnome-desktop-3-dev
+      - libgoa-1.0-dev
+      - libgtk-3-dev
+      - libtelepathy-glib-dev
+      - valac
+      - libcheese-gtk-dev
+      - libgirepository1.0-dev
