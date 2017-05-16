@@ -33,6 +33,7 @@ slots:
 apps:
   gnome-contacts:
     command: desktop-launch $SNAP/bin/gnome-contacts
+    desktop: share/applications/org.gnome.Contacts.desktop
     environment:
       GSETTINGS_SCHEMA_DIR: /snap/gnome-contacts/current/share/glib-2.0/schemas
     plugs:
